@@ -1,44 +1,56 @@
-import '@cloudscape-design/global-styles/index.css';
-import { useEffect, useState } from 'react';
+import "@cloudscape-design/global-styles/index.css";
+import { useEffect, useState } from "react";
 import {
   AccountsBreadcrumbs,
   Navigation,
   TableLayout,
-  ToolsContent,
   TableComponent,
-  ACCOUNT_COLUMN_DEFINITIONS,
+  AccountViewModal,
+  AccountCreateModal,
+  // AccountEditModal,
   ACCOUNT_PREFERENCES,
-  ACCOUNT_FILTERING_PROPERTIES,
+  ACCOUNT_COLUMN_DEFINITIONS,
   ACCOUNT_PAGE_SIZE_OPTIONS,
   ACCOUNT_VISIBLE_CONTENT_OPTIONS,
-} from '../components';
-import { AccountProvider } from '../providers';
+  ACCOUNT_FILTERING_PROPERTIES,
+} from "../components";
+import { AccountModel } from "../models";
+import { AccountProvider } from "../providers";
 
 export function AccountsPage() {
-  const [accounts, setAccounts] = useState([]);
+  const [accounts, setAccounts] = useState([] as AccountModel[]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [toolsOpen, setToolsOpen] = useState(false);
 
-  const [offset, setOffset] = useState(0);
   const [count, setCount] = useState(0);
 
-  const limit = 25;
-
   useEffect(() => {
-    AccountProvider.list({ offset, limit }).then((res: any) => {
+    AccountProvider.list().then((res) => {
       setAccounts(res.accounts);
       setCount(res.count);
     });
-  }, [offset, limit]);
+  });
+
+  async function getAccount(selectedAccount: AccountModel) {
+    return await AccountProvider.get(selectedAccount.accountId);
+  }
+
+  /*async function deleteAccount(selectedAccount: AccountModel) {
+    return await AccountProvider.delete(selectedAccount.accountId);
+  }*/
 
   return (
     <TableLayout
-      navigation={<Navigation activeHref="/accounts" />}
+      navigation={<Navigation activeHref="/buildings" />}
       breadcrumbs={<AccountsBreadcrumbs />}
       content={
         <TableComponent
-          loadingText="Loading accounts"
-          resourceName={'Account'}
+          resourceName={"Account"}
+          viewModal={AccountViewModal}
+          createModal={AccountCreateModal}
+          editModal={undefined} // TODO
+          getResource={getAccount}
+          deleteResource={undefined} // TODO
           data={accounts}
           updateTools={() => setToolsOpen(true)}
           columnDefinitions={ACCOUNT_COLUMN_DEFINITIONS}
@@ -46,9 +58,6 @@ export function AccountsPage() {
           filteringProperties={ACCOUNT_FILTERING_PROPERTIES}
           selectedItems={selectedItems}
           setSelectedItems={setSelectedItems}
-          offset={offset}
-          setOffset={setOffset}
-          limit={limit}
           count={count}
           pageSizeOptions={ACCOUNT_PAGE_SIZE_OPTIONS}
           visibleContentOptions={ACCOUNT_VISIBLE_CONTENT_OPTIONS}
@@ -56,7 +65,6 @@ export function AccountsPage() {
         />
       }
       contentType="table"
-      tools={<ToolsContent />}
       toolsOpen={toolsOpen}
       onToolsChange={({ detail }: { detail: any }) => setToolsOpen(detail.open)}
       stickyNotifications={true}
