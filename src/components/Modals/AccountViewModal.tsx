@@ -29,6 +29,11 @@ export function AccountViewModal(props: any) {
               header: "Starting Balance",
               content: (item) => item.startingBalance,
             },
+            {
+              id: "clientId",
+              header: "Client ID",
+              content: (item) => item.clientId,
+            },
           ],
         }}
         cardsPerRow={[{ cards: 1 }]}
@@ -37,6 +42,7 @@ export function AccountViewModal(props: any) {
             accountId: `${props.selectedItem.accountId}`,
             balance: `${props.selectedItem.balance}`,
             startingBalance: `${props.selectedItem.startingBalance}`,
+            clientId: `${props.selectedItem.clientId}`,
           },
         ]}
         loadingText={props.loadingText}

@@ -13,35 +13,53 @@ import {
   ACCOUNT_PAGE_SIZE_OPTIONS,
   ACCOUNT_VISIBLE_CONTENT_OPTIONS,
   ACCOUNT_FILTERING_PROPERTIES,
+  useLocalStorage,
 } from "../components";
 import { AccountModel } from "../models";
 import { AccountProvider } from "../providers";
 
-export function AccountsPage() {
+export function AccountsPage(props: any) {
   const [accounts, setAccounts] = useState([] as AccountModel[]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [toolsOpen, setToolsOpen] = useState(false);
+  const [preferences, setPreferences] = useLocalStorage(
+    "React-AccountsTable-Preferences",
+    ACCOUNT_PREFERENCES
+  );
 
   const [count, setCount] = useState(0);
 
+  const accountProvider = new AccountProvider(props.accessToken);
+
   useEffect(() => {
-    AccountProvider.list().then((res) => {
+    accountProvider.list().then((res) => {
       setAccounts(res.accounts);
       setCount(res.count);
     });
-  });
+  }, [props.accessToken]);
 
-  async function getAccount(selectedAccount: AccountModel) {
-    return await AccountProvider.get(selectedAccount.accountId);
+  async function createAccount(account: AccountModel) {
+    return await accountProvider.create(account);
   }
 
-  /*async function deleteAccount(selectedAccount: AccountModel) {
-    return await AccountProvider.delete(selectedAccount.accountId);
-  }*/
+  async function getAccount(selectedAccount: AccountModel) {
+    return await accountProvider.get(selectedAccount.accountId);
+  }
+
+  async function deleteAccount(selectedAccount: AccountModel) {
+    return await accountProvider.delete(selectedAccount.accountId);
+  }
 
   return (
     <TableLayout
-      navigation={<Navigation activeHref="/buildings" />}
+      navigation={
+        <Navigation
+          accessToken={props.accessToken}
+          setAccessToken={props.setAccessToken}
+          client={props.client}
+          activeHref="/accounts"
+        />
+      }
       breadcrumbs={<AccountsBreadcrumbs />}
       content={
         <TableComponent
@@ -49,19 +67,21 @@ export function AccountsPage() {
           viewModal={AccountViewModal}
           createModal={AccountCreateModal}
           editModal={undefined} // TODO
+          createResource={createAccount}
           getResource={getAccount}
-          deleteResource={undefined} // TODO
+          deleteResource={deleteAccount}
           data={accounts}
           updateTools={() => setToolsOpen(true)}
           columnDefinitions={ACCOUNT_COLUMN_DEFINITIONS}
-          preferences={ACCOUNT_PREFERENCES}
+          preferences={preferences}
+          setPreferences={setPreferences}
           filteringProperties={ACCOUNT_FILTERING_PROPERTIES}
           selectedItems={selectedItems}
           setSelectedItems={setSelectedItems}
           count={count}
           pageSizeOptions={ACCOUNT_PAGE_SIZE_OPTIONS}
           visibleContentOptions={ACCOUNT_VISIBLE_CONTENT_OPTIONS}
-          setPreferences={undefined}
+          client={props.client}
         />
       }
       contentType="table"

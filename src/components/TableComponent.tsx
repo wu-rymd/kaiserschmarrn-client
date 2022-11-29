@@ -84,6 +84,7 @@ function FullPageHeader(props: {
   resourceName: any;
   createModal: any;
   editModal: any;
+  createResource: any;
   getResource: any;
   deleteResource: any;
   selectedItems: any;
@@ -91,6 +92,7 @@ function FullPageHeader(props: {
   totalItems: any;
   serverSide: any;
   viewModal: any;
+  client: any;
 }) {
   const isOnlyOneSelected = props.selectedItems.length === 1;
 
@@ -145,25 +147,36 @@ function FullPageHeader(props: {
         totalItems={props.totalItems}
         actionButtons={
           <SpaceBetween size="xs" direction="horizontal">
-            <Button disabled={!isOnlyOneSelected} onClick={() => viewOnClick()}>
+            <Button
+              disabled={
+                !props.viewModal || !props.getResource || !isOnlyOneSelected
+              }
+              onClick={() => viewOnClick()}
+            >
               View details
             </Button>
             <Button
-              disabled={!isOnlyOneSelected}
+              disabled={
+                !props.editModal || !props.getResource || !isOnlyOneSelected
+              }
               onClick={() => editOnClick(props.selectedItems[0])}
             >
               Edit
             </Button>
             <Button
-              disabled={props.selectedItems.length === 0}
+              disabled={!props.deleteResource || !isOnlyOneSelected}
               onClick={() => deleteOnClick(props.selectedItems[0])}
             >
               Delete
             </Button>
-            <Button variant="primary" onClick={() => createOnClick()}>
+            <Button
+              disabled={!props.createModal}
+              variant="primary"
+              onClick={() => createOnClick()}
+            >
               Create
             </Button>
-            {props.selectedItems.length !== 0 && (
+            {props.viewModal && props.selectedItems.length !== 0 && (
               <props.viewModal
                 visible={viewModalVisible}
                 setVisible={setViewModalVisible}
@@ -181,15 +194,19 @@ function FullPageHeader(props: {
                 closeAriaLabel={"Close modal"}
               />
             )}
-            <props.createModal
-              visible={createVisible}
-              setVisible={setCreateVisible}
-              setSuccessMessage={setSuccessMessage}
-              setShowSuccess={setShowSuccess}
-              header={`New ${props.resourceName}`}
-              closeAriaLabel={"Close modal"}
-            />
-            {props.selectedItems.length !== 0 && (
+            {props.createModal && (
+              <props.createModal
+                visible={createVisible}
+                setVisible={setCreateVisible}
+                setSuccessMessage={setSuccessMessage}
+                setShowSuccess={setShowSuccess}
+                header={`New ${props.resourceName}`}
+                closeAriaLabel={"Close modal"}
+                createResource={props.createResource}
+                client={props.client}
+              />
+            )}
+            {props.editModal && props.selectedItems.length !== 0 && (
               <props.editModal
                 visible={editVisible}
                 setVisible={setEditVisible}
@@ -212,6 +229,7 @@ export function TableComponent(props: {
   viewModal: any;
   createModal: any;
   editModal: any;
+  createResource: any;
   getResource: any;
   deleteResource: any;
   data: any;
@@ -225,6 +243,7 @@ export function TableComponent(props: {
   setPreferences: any;
   pageSizeOptions: any;
   visibleContentOptions: any;
+  client: any;
 }) {
   let filteringProperties = props.filteringProperties;
   const {
@@ -273,6 +292,7 @@ export function TableComponent(props: {
           viewModal={props.viewModal}
           createModal={props.createModal}
           editModal={props.editModal}
+          createResource={props.createResource}
           getResource={props.getResource}
           deleteResource={props.deleteResource}
           resourceName={props.resourceName}
@@ -280,6 +300,7 @@ export function TableComponent(props: {
           totalItems={props.data}
           updateTools={props.updateTools}
           serverSide={true}
+          client={props.client}
         />
       }
       loadingText={`Loading ${props.resourceName.toLowerCase()}s`}
@@ -290,6 +311,9 @@ export function TableComponent(props: {
           countText={getFilterCounterText(filteredItemsCount)}
           expandToViewport={true}
         />
+      }
+      pagination={
+        <Pagination {...paginationProps} ariaLabels={paginationLabels} />
       }
       preferences={
         <Preferences
@@ -317,7 +341,9 @@ function Preferences(props: {
       cancelLabel="Cancel"
       // disabled={props.disabled}
       preferences={props.preferences}
-      onConfirm={({ detail }: { detail: any }) => props.setPreferences(detail)}
+      onConfirm={({ detail }: { detail: any }) => {
+        props.setPreferences(detail);
+      }}
       pageSizePreference={{
         title: "Page size",
         options: props.pageSizeOptions,

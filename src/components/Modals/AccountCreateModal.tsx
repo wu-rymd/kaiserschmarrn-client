@@ -10,7 +10,6 @@ import {
   Alert,
   Modal,
 } from "@cloudscape-design/components";
-import { AccountProvider } from "../../providers";
 import { AccountModel } from "../../models";
 
 export function AccountCreateModal(props: any) {
@@ -24,9 +23,13 @@ export function AccountCreateModal(props: any) {
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     try {
-      const a = new AccountModel({ accountId, balance, startingBalance });
-      let res = await AccountProvider.create(a);
-
+      const a = new AccountModel({
+        accountId,
+        balance,
+        startingBalance,
+        clientId: props.client.clientId,
+      });
+      const res = await props.createResource(a);
       if (res.status === 200) {
         props.setSuccessMessage(`Account created successfully`);
         props.setShowSuccess(true);
@@ -84,23 +87,26 @@ export function AccountCreateModal(props: any) {
           <form onSubmit={handleSubmit}>
             <Form>
               <SpaceBetween direction="vertical" size="s">
-                <FormField label="Building Code">
+                <FormField label="Account ID">
                   <Input
                     value={accountId}
+                    onChange={(event) => setAccountId(event.detail.value)}
+                  />
+                </FormField>
+                <FormField label="Balance">
+                  <Input
+                    value={balance}
                     onChange={(event) => setBalance(event.detail.value)}
                   />
                 </FormField>
-                <FormField label="Building Name">
+                <FormField label="Starting Balance">
                   <Input
-                    value={balance}
+                    value={startingBalance}
                     onChange={(event) => setStartingBalance(event.detail.value)}
                   />
                 </FormField>
-                <FormField label="Building Name">
-                  <Input
-                    value={balance}
-                    onChange={(event) => setStartingBalance(event.detail.value)}
-                  />
+                <FormField label="Client ID">
+                  <Input value={props.client.clientId} disabled />
                 </FormField>
               </SpaceBetween>
             </Form>
