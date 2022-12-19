@@ -26,6 +26,7 @@ export function CryptosPage(props: any) {
   );
 
   const [count, setCount] = useState(0);
+  const [refresh, setRefresh] = useState(0);
 
   const cryptoProvider = new CryptoProvider(props.accessToken);
 
@@ -34,7 +35,7 @@ export function CryptosPage(props: any) {
       setCryptos(res.cryptos);
       setCount(res.count);
     });
-  }, []);
+  }, [refresh]);
 
   async function getCrypto(selectedCrypto: CryptoModel) {
     return await cryptoProvider.get(selectedCrypto.cryptocurrencyId);
@@ -63,6 +64,8 @@ export function CryptosPage(props: any) {
           data={cryptos}
           updateTools={() => setToolsOpen(true)}
           columnDefinitions={CRYPTO_COLUMN_DEFINITIONS}
+          refresh={refresh}
+          setRefresh={setRefresh}
           preferences={preferences}
           setPreferences={setPreferences}
           filteringProperties={CRYPTO_FILTERING_PROPERTIES}

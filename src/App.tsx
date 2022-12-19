@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import "./App.css";
 import { useLocalStorage } from "./components";
 import {
@@ -31,6 +31,12 @@ export default function App() {
     return false;
   }
 
+  const navigate = useNavigate();
+  function signOut() {
+    setAccessToken("");
+    navigate("/");
+  }
+
   function RequireAuth(props: { page: Function }) {
     if (isAccessTokenExists(accessToken)) {
       return (
@@ -38,6 +44,7 @@ export default function App() {
           accessToken={accessToken}
           setAccessToken={setAccessToken}
           client={client}
+          signOut={signOut}
         />
       );
     } else {

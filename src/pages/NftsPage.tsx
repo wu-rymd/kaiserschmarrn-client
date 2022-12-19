@@ -26,6 +26,7 @@ export function NftsPage(props: any) {
   );
 
   const [count, setCount] = useState(0);
+  const [refresh, setRefresh] = useState(0);
 
   const nftProvider = new NftProvider(props.accessToken);
 
@@ -34,7 +35,7 @@ export function NftsPage(props: any) {
       setNfts(res.nfts);
       setCount(res.count);
     });
-  }, []);
+  }, [refresh]);
 
   async function getNFT(selectedNft: NftModel) {
     return await nftProvider.get(selectedNft.nftId);
@@ -63,6 +64,8 @@ export function NftsPage(props: any) {
           data={nfts}
           updateTools={() => setToolsOpen(true)}
           columnDefinitions={NFT_COLUMN_DEFINITIONS}
+          refresh={refresh}
+          setRefresh={setRefresh}
           preferences={preferences}
           setPreferences={setPreferences}
           filteringProperties={NFT_FILTERING_PROPERTIES}

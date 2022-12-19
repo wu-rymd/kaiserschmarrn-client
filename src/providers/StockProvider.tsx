@@ -1,4 +1,5 @@
 import { StockModel } from "../models";
+import { SERVER_URL } from "../Config";
 
 export class StockProvider {
   readonly accessToken: string;
@@ -12,7 +13,7 @@ export class StockProvider {
     count: number;
   }> {
     // TODO handle failures
-    const res = await fetch(`http://localhost:8080/stocks`, {
+    const res = await fetch(`${SERVER_URL}/stocks`, {
       method: "GET",
       headers: new Headers({
         Authorization: `Bearer ${this.accessToken}`,
@@ -25,7 +26,7 @@ export class StockProvider {
   }
 
   async get(stockId: string): Promise<StockModel> {
-    const res = await fetch(`http://localhost:8080/stocks/${stockId}`, {
+    const res = await fetch(`${SERVER_URL}/stocks/${stockId}`, {
       method: "GET",
       headers: new Headers({
         Authorization: `Bearer ${this.accessToken}`,
@@ -37,28 +38,22 @@ export class StockProvider {
   }
 
   async updateAllStockPrices(): Promise<Response> {
-    const res = await fetch(
-      `http://localhost:8080/finance/updateAllStockPrices`,
-      {
-        method: "GET",
-        headers: new Headers({
-          Authorization: `Bearer ${this.accessToken}`,
-        }),
-      }
-    );
+    const res = await fetch(`${SERVER_URL}/finance/updateAllStockPrices`, {
+      method: "GET",
+      headers: new Headers({
+        Authorization: `Bearer ${this.accessToken}`,
+      }),
+    });
     return Promise.resolve(res);
   }
 
   async getHistoricalData(stockId: string): Promise<Response> {
-    const res = await fetch(
-      `http://localhost:8080/finance/${stockId}/historical`,
-      {
-        method: "GET",
-        headers: new Headers({
-          Authorization: `Bearer ${this.accessToken}`,
-        }),
-      }
-    );
+    const res = await fetch(`${SERVER_URL}/finance/${stockId}/historical`, {
+      method: "GET",
+      headers: new Headers({
+        Authorization: `Bearer ${this.accessToken}`,
+      }),
+    });
     return Promise.resolve(res);
   }
 

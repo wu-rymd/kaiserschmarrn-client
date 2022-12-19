@@ -1,4 +1,5 @@
 import { CryptoModel } from "../models";
+import { SERVER_URL } from "../Config";
 
 export class CryptoProvider {
   readonly accessToken: string;
@@ -12,7 +13,7 @@ export class CryptoProvider {
     count: number;
   }> {
     // TODO handle failures
-    const res = await fetch(`http://localhost:8080/cryptocurrencies`, {
+    const res = await fetch(`${SERVER_URL}/cryptocurrencies`, {
       method: "GET",
       headers: new Headers({
         Authorization: `Bearer ${this.accessToken}`,
@@ -26,7 +27,7 @@ export class CryptoProvider {
 
   async get(cryptocurrencyId: string): Promise<CryptoModel> {
     const res = await fetch(
-      `http://localhost:8080/cryptocurrencies/${cryptocurrencyId}`,
+      `${SERVER_URL}/cryptocurrencies/${cryptocurrencyId}`,
       {
         method: "GET",
         headers: new Headers({

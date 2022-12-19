@@ -1,4 +1,4 @@
-import { HelpPanel, Icon, Link } from '@cloudscape-design/components';
+import { HelpPanel, Icon, Link } from "@cloudscape-design/components";
 
 export const ExternalLinkItem = ({ href, text }: { href: any; text: any }) => (
   <Link href={href} target="_blank">
@@ -12,7 +12,7 @@ export const ToolsContent = () => (
     footer={
       <>
         <h3>
-          Code & Docs{' '}
+          Code & Docs{" "}
           <span role="img" aria-label="Icon external Link">
             <Icon name="external" />
           </span>
@@ -21,16 +21,25 @@ export const ToolsContent = () => (
           <li>
             <ExternalLinkItem
               href="https://github.com/wu-rymd/kaiserschmarrn"
-              text="GitHub repo for server"
+              text="GitHub Repo - Server"
             />
           </li>
           <li>
-            <ExternalLinkItem href="#" text="Documentation" />
+            <ExternalLinkItem
+              href="https://github.com/wu-rymd/kaiserschmarrn-client"
+              text="GitHub Repo - Client"
+            />
+          </li>
+          <li>
+            <ExternalLinkItem
+              href="https://app.swaggerhub.com/apis-docs/BORAELCI/kaiserschmarrn/v0"
+              text="API Documentation - Swagger"
+            />
           </li>
         </ul>
       </>
     }
   >
-    <p>Manage virtual stock accounts</p>
+    <p>Manage trading accounts</p>
   </HelpPanel>
 );

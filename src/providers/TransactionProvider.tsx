@@ -1,4 +1,5 @@
 import { TransactionModel } from "../models";
+import { SERVER_URL } from "../Config";
 
 export class TransactionProvider {
   readonly accessToken: string;
@@ -12,7 +13,7 @@ export class TransactionProvider {
     count: number;
   }> {
     // TODO handle failures
-    const res = await fetch(`http://localhost:8080/transactions`, {
+    const res = await fetch(`${SERVER_URL}/transactions`, {
       method: "GET",
       headers: new Headers({
         Authorization: `Bearer ${this.accessToken}`,
@@ -27,22 +28,19 @@ export class TransactionProvider {
   }
 
   async get(transactionId: string): Promise<TransactionModel> {
-    const res = await fetch(
-      `http://localhost:8080/transactions/${transactionId}`,
-      {
-        method: "GET",
-        headers: new Headers({
-          Authorization: `Bearer ${this.accessToken}`,
-        }),
-      }
-    );
+    const res = await fetch(`${SERVER_URL}/transactions/${transactionId}`, {
+      method: "GET",
+      headers: new Headers({
+        Authorization: `Bearer ${this.accessToken}`,
+      }),
+    });
     const jsonRes = await res.json();
     const transaction = new TransactionModel(jsonRes);
     return transaction;
   }
 
   async create(transaction: TransactionModel): Promise<Response> {
-    const res = await fetch(`http://localhost:8080/transactions`, {
+    const res = await fetch(`${SERVER_URL}/transactions`, {
       method: "POST",
       headers: new Headers({
         Authorization: `Bearer ${this.accessToken}`,

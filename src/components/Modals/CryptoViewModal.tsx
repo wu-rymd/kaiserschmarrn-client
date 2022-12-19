@@ -9,15 +9,15 @@ export function CryptoViewModal(props: any) {
     >
       <Cards
         ariaLabels={{
-          itemSelectionLabel: (e, t) => `select ${t.cryptoId}`,
+          itemSelectionLabel: (e, t) => `select ${t.cryptocurrencyId}`,
           selectionGroupLabel: "Item selection",
         }}
         cardDefinition={{
           sections: [
             {
-              id: "cryptoId",
+              id: "cryptocurrencyId",
               header: "Crypto ID",
-              content: (item) => item.cryptoId,
+              content: (item) => item.cryptocurrencyId,
             },
             {
               id: "price",
@@ -29,13 +29,13 @@ export function CryptoViewModal(props: any) {
         cardsPerRow={[{ cards: 1 }]}
         items={[
           {
-            cryptoId: `${props.selectedItem.cryptoId}`,
+            cryptocurrencyId: `${props.selectedItem.cryptocurrencyId}`,
             price: `${props.selectedItem.price}`,
           },
         ]}
         loadingText={props.loadingText}
         empty={props.empty}
-        header={<Header>{props.selectedItem.cryptoId}</Header>}
+        header={<Header>{props.selectedItem.cryptocurrencyId}</Header>}
       />
     </Modal>
   );

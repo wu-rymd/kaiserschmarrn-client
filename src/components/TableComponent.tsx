@@ -93,6 +93,8 @@ function FullPageHeader(props: {
   serverSide: any;
   viewModal: any;
   client: any;
+  refresh: any;
+  setRefresh: any;
 }) {
   const isOnlyOneSelected = props.selectedItems.length === 1;
 
@@ -123,6 +125,7 @@ function FullPageHeader(props: {
     if (result.status === 200) {
       setSuccessMessage(`${props.resourceName} deleted successfully`);
       setShowSuccess(true);
+      props.setRefresh(props.refresh + 1);
     } else {
       console.log("Some error occured");
     }
@@ -196,6 +199,8 @@ function FullPageHeader(props: {
             )}
             {props.createModal && (
               <props.createModal
+                refresh={props.refresh}
+                setRefresh={props.setRefresh}
                 visible={createVisible}
                 setVisible={setCreateVisible}
                 setSuccessMessage={setSuccessMessage}
@@ -208,6 +213,8 @@ function FullPageHeader(props: {
             )}
             {props.editModal && props.selectedItems.length !== 0 && (
               <props.editModal
+                refresh={props.refresh}
+                setRefresh={props.setRefresh}
                 visible={editVisible}
                 setVisible={setEditVisible}
                 selectedItem={props.selectedItems[0]}
@@ -240,6 +247,8 @@ export function TableComponent(props: {
   selectedItems: any;
   setSelectedItems: any;
   count: any;
+  refresh: any;
+  setRefresh: any;
   setPreferences: any;
   pageSizeOptions: any;
   visibleContentOptions: any;
@@ -295,6 +304,8 @@ export function TableComponent(props: {
           createResource={props.createResource}
           getResource={props.getResource}
           deleteResource={props.deleteResource}
+          refresh={props.refresh}
+          setRefresh={props.setRefresh}
           resourceName={props.resourceName}
           selectedItems={props.selectedItems}
           totalItems={props.data}

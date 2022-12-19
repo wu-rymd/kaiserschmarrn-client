@@ -5,6 +5,7 @@ import {
   Navigation,
   StocksHistoricalBreadcrumbs,
   TableLayout,
+  useLocalStorage,
 } from "../components";
 import { LineChartComponent } from "../components/LineChartComponent";
 import { StockProvider } from "../providers";
@@ -19,10 +20,12 @@ export function StocksHistoricalPage(props: any) {
   useEffect(() => {
     stockProvider.getHistoricalData(stockId!).then((res) => {
       res.json().then((t) => {
+        console.log(JSON.stringify(t));
         setData(JSON.stringify(t));
       });
     });
   }, []);
+
   return (
     <TableLayout
       navigation={
@@ -36,8 +39,18 @@ export function StocksHistoricalPage(props: any) {
       breadcrumbs={<StocksHistoricalBreadcrumbs />}
       content={
         <SpaceBetween size={"l"}>
-          {data.length > 10 && <LineChartComponent></LineChartComponent>}
-          <div>{data}</div>
+          <br></br>
+          {data.length > 10 && (
+            <LineChartComponent
+              name={stockId}
+              data={JSON.parse(data).map((d: any) => {
+                return {
+                  x: new Date(d.date.split("T")[0]),
+                  y: d.close,
+                };
+              })}
+            ></LineChartComponent>
+          )}
         </SpaceBetween>
       }
       contentType="default"

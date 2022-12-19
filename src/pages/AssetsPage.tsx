@@ -26,6 +26,7 @@ export function AssetsPage(props: any) {
   );
 
   const [count, setCount] = useState(0);
+  const [refresh, setRefresh] = useState(0);
 
   const assetProvider = new AssetProvider(props.accessToken);
 
@@ -34,7 +35,7 @@ export function AssetsPage(props: any) {
       setAssets(res.assets);
       setCount(res.count);
     });
-  }, []);
+  }, [refresh]);
 
   async function getAsset(selectedAsset: AssetModel) {
     return selectedAsset;
@@ -64,6 +65,8 @@ export function AssetsPage(props: any) {
           data={assets}
           updateTools={() => setToolsOpen(true)}
           columnDefinitions={ASSET_COLUMN_DEFINITIONS}
+          refresh={refresh}
+          setRefresh={setRefresh}
           preferences={preferences}
           setPreferences={setPreferences}
           filteringProperties={ASSET_FILTERING_PROPERTIES}

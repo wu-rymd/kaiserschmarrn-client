@@ -1,4 +1,5 @@
 import { AssetModel } from "../models";
+import { SERVER_URL } from "../Config";
 
 export class AssetProvider {
   readonly accessToken: string;
@@ -12,7 +13,7 @@ export class AssetProvider {
     count: number;
   }> {
     // TODO handle failures
-    const res = await fetch(`http://localhost:8080/assets`, {
+    const res = await fetch(`${SERVER_URL}/assets`, {
       method: "GET",
       headers: new Headers({
         Authorization: `Bearer ${this.accessToken}`,
@@ -25,7 +26,7 @@ export class AssetProvider {
   }
 
   async get(assetId: string): Promise<AssetModel> {
-    const res = await fetch(`http://localhost:8080/assets/${assetId}`, {
+    const res = await fetch(`${SERVER_URL}/assets/${assetId}`, {
       method: "GET",
       headers: new Headers({
         Authorization: `Bearer ${this.accessToken}`,

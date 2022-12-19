@@ -26,6 +26,7 @@ export function TransactionsPage(props: any) {
   );
 
   const [count, setCount] = useState(0);
+  const [refresh, setRefresh] = useState(0);
 
   const transactionProvider = new TransactionProvider(props.accessToken);
 
@@ -34,7 +35,7 @@ export function TransactionsPage(props: any) {
       setTransactions(res.transactions);
       setCount(res.count);
     });
-  }, []);
+  }, [refresh]);
 
   async function getTransaction(selectedTransaction: TransactionModel) {
     return await transactionProvider.get(selectedTransaction.uuid!);
@@ -63,6 +64,8 @@ export function TransactionsPage(props: any) {
           data={transactions}
           updateTools={() => setToolsOpen(true)}
           columnDefinitions={TRANSACTION_COLUMN_DEFINITIONS}
+          refresh={refresh}
+          setRefresh={setRefresh}
           preferences={preferences}
           setPreferences={setPreferences}
           filteringProperties={TRANSACTION_FILTERING_PROPERTIES}

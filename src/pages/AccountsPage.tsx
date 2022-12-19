@@ -28,15 +28,21 @@ export function AccountsPage(props: any) {
   );
 
   const [count, setCount] = useState(0);
+  const [refresh, setRefresh] = useState(0);
 
   const accountProvider = new AccountProvider(props.accessToken);
 
   useEffect(() => {
-    accountProvider.list().then((res) => {
-      setAccounts(res.accounts);
-      setCount(res.count);
-    });
-  }, [props.accessToken]);
+    accountProvider
+      .list()
+      .then((res) => {
+        setAccounts(res.accounts);
+        setCount(res.count);
+      })
+      .catch((res) => {
+        props.signOut();
+      });
+  }, [props.accessToken, refresh]);
 
   async function createAccount(account: AccountModel) {
     return await accountProvider.create(account);
@@ -73,6 +79,8 @@ export function AccountsPage(props: any) {
           data={accounts}
           updateTools={() => setToolsOpen(true)}
           columnDefinitions={ACCOUNT_COLUMN_DEFINITIONS}
+          refresh={refresh}
+          setRefresh={setRefresh}
           preferences={preferences}
           setPreferences={setPreferences}
           filteringProperties={ACCOUNT_FILTERING_PROPERTIES}

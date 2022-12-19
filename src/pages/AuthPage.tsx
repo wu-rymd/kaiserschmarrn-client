@@ -44,7 +44,7 @@ export function AuthPage(props: any) {
     });
   }
 
-  const handleSubmit = async (event: any) => {
+  const handleLogin = async (event: any) => {
     event.preventDefault();
     try {
       const a = new AuthModel({ clientId, password });
@@ -67,25 +67,58 @@ export function AuthPage(props: any) {
     }
   };
 
-  const reset = () => {
+  const handleSignUp = async (event: any) => {
+    event.preventDefault();
+    try {
+      const a = new AuthModel({ clientId, password });
+      let res = await AuthProvider.signUp(a);
+
+      if (res.status === 200) {
+        setSuccessMessage(`Sign up successful. Redirecting...`);
+        setShowSuccess(true);
+        setShowError(false);
+        const jsonRes = await res.json();
+        props.setAccessToken(jsonRes.accessToken);
+        props.setClient(new ClientModel({ clientId: jsonRes.clientId }));
+        setUserLoggedIn(true);
+      } else {
+        setErrorMessage("Some error occured");
+        setShowError(true);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  /*const reset = () => {
     setShowError(false);
     setErrorMessage("");
     setClientId("");
     setPassword("");
-  };
+  };*/
 
-  return (
+  const [isSignUp, setIsSignUp] = useState(false);
+
+  function signUpClicked() {
+    setIsSignUp(true);
+  }
+
+  function loginClicked() {
+    setIsSignUp(false);
+  }
+
+  const loginModal = (
     <Modal
-      onDismiss={reset}
-      visible={true}
+      // onDismiss={reset}
+      visible={!isSignUp}
       header={"Login"}
       footer={
         <Box float="right">
           <SpaceBetween direction="horizontal" size="xs">
-            <Button variant="link" onClick={reset}>
-              Clear
+            <Button variant="normal" onClick={signUpClicked}>
+              Go to Sign Up
             </Button>
-            <Button variant="primary" onClick={handleSubmit}>
+            <Button variant="primary" onClick={handleLogin}>
               Login
             </Button>
           </SpaceBetween>
@@ -104,7 +137,7 @@ export function AuthPage(props: any) {
             {successMessage}
           </Alert>
           <Alert
-            onDismiss={reset}
+            onDismiss={() => setShowError(false)}
             visible={showError}
             dismissAriaLabel="Close alert"
             dismissible
@@ -114,7 +147,7 @@ export function AuthPage(props: any) {
           </Alert>
         </Box>
         <Box>
-          <form onSubmit={handleSubmit}>
+          <form>
             <Form>
               <SpaceBetween direction="vertical" size="s">
                 <FormField label="Client ID">
@@ -136,4 +169,69 @@ export function AuthPage(props: any) {
       </Box>
     </Modal>
   );
+
+  const signUpModal = (
+    <Modal
+      // onDismiss={reset}
+      visible={isSignUp}
+      header={"Sign Up"}
+      footer={
+        <Box float="right">
+          <SpaceBetween direction="horizontal" size="xs">
+            <Button variant="normal" onClick={loginClicked}>
+              Go to Login
+            </Button>
+            <Button variant="primary" onClick={handleSignUp}>
+              Sign Up
+            </Button>
+          </SpaceBetween>
+        </Box>
+      }
+    >
+      <Box margin={{ vertical: "xs", horizontal: "l" }} textAlign="center">
+        <Box>
+          <Alert
+            onDismiss={() => setShowSuccess(false)}
+            visible={showSuccess}
+            dismissAriaLabel="Close alert"
+            dismissible
+            type="success"
+          >
+            {successMessage}
+          </Alert>
+          <Alert
+            onDismiss={() => setShowError(false)}
+            visible={showError}
+            dismissAriaLabel="Close alert"
+            dismissible
+            type="error"
+          >
+            {errorMessage}
+          </Alert>
+        </Box>
+        <Box>
+          <form>
+            <Form>
+              <SpaceBetween direction="vertical" size="s">
+                <FormField label="Client ID">
+                  <Input
+                    value={clientId}
+                    onChange={(event) => setClientId(event.detail.value)}
+                  />
+                </FormField>
+                <FormField label="Password">
+                  <Input
+                    value={password}
+                    onChange={(event) => setPassword(event.detail.value)}
+                  />
+                </FormField>
+              </SpaceBetween>
+            </Form>
+          </form>
+        </Box>
+      </Box>
+    </Modal>
+  );
+
+  return isSignUp ? signUpModal : loginModal;
 }

@@ -1,4 +1,5 @@
 import { NftModel } from "../models";
+import { SERVER_URL } from "../Config";
 
 export class NftProvider {
   readonly accessToken: string;
@@ -12,7 +13,7 @@ export class NftProvider {
     count: number;
   }> {
     // TODO handle failures
-    const res = await fetch(`http://localhost:8080/nfts`, {
+    const res = await fetch(`${SERVER_URL}/nfts`, {
       method: "GET",
       headers: new Headers({
         Authorization: `Bearer ${this.accessToken}`,
@@ -25,7 +26,7 @@ export class NftProvider {
   }
 
   async get(nftId: string): Promise<NftModel> {
-    const res = await fetch(`http://localhost:8080/nfts/${nftId}`, {
+    const res = await fetch(`${SERVER_URL}/nfts/${nftId}`, {
       method: "GET",
       headers: new Headers({
         Authorization: `Bearer ${this.accessToken}`,

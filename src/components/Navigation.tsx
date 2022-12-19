@@ -31,7 +31,7 @@ export function Navigation(props: any) {
     {
       type: "section",
       text: "User View",
-      items: [{ type: "link", text: "Invest in stocks", href: "/invest" }],
+      items: [{ type: "link", text: "Invest in Stocks", href: "/invest" }],
     },
     {
       type: "divider",

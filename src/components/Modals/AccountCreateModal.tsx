@@ -33,6 +33,7 @@ export function AccountCreateModal(props: any) {
       if (res.status === 200) {
         props.setSuccessMessage(`Account created successfully`);
         props.setShowSuccess(true);
+        props.setRefresh(props.refresh + 1);
         reset();
       } else {
         setErrorMessage("Some error occured");
@@ -96,13 +97,17 @@ export function AccountCreateModal(props: any) {
                 <FormField label="Balance">
                   <Input
                     value={balance}
-                    onChange={(event) => setBalance(event.detail.value)}
+                    onChange={(event) => {
+                      setBalance(event.detail.value);
+                      setStartingBalance(event.detail.value);
+                    }}
                   />
                 </FormField>
                 <FormField label="Starting Balance">
                   <Input
                     value={startingBalance}
-                    onChange={(event) => setStartingBalance(event.detail.value)}
+                    // onChange={(event) => setStartingBalance(event.detail.value)}
+                    disabled
                   />
                 </FormField>
                 <FormField label="Client ID">

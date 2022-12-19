@@ -13,12 +13,13 @@ Team repo for Advanced Software Engineering (COMS W4156) / Fall 2022
 - Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 - Ensure that the backend server is running. Errors should be logged in your browser's developer console.
 
-### Login
+### Sign Up or Login
 
-- Use the credentials for our demo clients. The password is `12345678` for all. Here are the usernames:
-  - ftx_exchange
-  - binance
+- Sign up with your own credentials and create a few accounts
+- Remember your credentials because you will have to login again after 24 hours
 
-## Notes
+## Deployment
 
-- To see new changes take effect on the client's pages, use Ctrl+R or Command+R to refresh the page after modifying actions such as creating/deleting an account or a buy/sell transaction.
+- Deployed on AWS S3 through CloudFront
+- Visit [http://d3lrarwr7f9faf.cloudfront.net/](http://d3lrarwr7f9faf.cloudfront.net/). Note: this link may go outdated
+- Ensure that you use http and not http**s**!

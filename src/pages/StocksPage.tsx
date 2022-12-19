@@ -1,4 +1,4 @@
-import { Button, SpaceBetween } from "@cloudscape-design/components";
+import { Alert, Button, SpaceBetween } from "@cloudscape-design/components";
 import "@cloudscape-design/global-styles/index.css";
 import { useEffect, useState } from "react";
 import {
@@ -27,15 +27,18 @@ export function StocksPage(props: any) {
   );
 
   const [count, setCount] = useState(0);
+  const [refresh, setRefresh] = useState(0);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const stockProvider = new StockProvider(props.accessToken);
-
   useEffect(() => {
+    const stockProvider = new StockProvider(props.accessToken);
     stockProvider.list().then((res) => {
       setStocks(res.stocks);
       setCount(res.count);
     });
-  }, []);
+  }, [refresh, props.accessToken]);
 
   async function getStock(selectedStock: StockModel) {
     return await stockProvider.get(selectedStock.stockId);
@@ -45,6 +48,9 @@ export function StocksPage(props: any) {
     const res = await stockProvider.updateAllStockPrices();
     if (res.status === 200) {
       console.log("Successfully fetched real-time prices");
+      setSuccessMessage(`Stock prices refreshed`);
+      setShowSuccess(true);
+      setRefresh(refresh + 1);
     } else {
       console.log("Failed to refresh stock prices");
     }
@@ -74,6 +80,8 @@ export function StocksPage(props: any) {
             data={stocks}
             updateTools={() => setToolsOpen(true)}
             columnDefinitions={STOCK_COLUMN_DEFINITIONS}
+            refresh={refresh}
+            setRefresh={setRefresh}
             preferences={preferences}
             setPreferences={setPreferences}
             filteringProperties={STOCK_FILTERING_PROPERTIES}
@@ -84,6 +92,15 @@ export function StocksPage(props: any) {
             visibleContentOptions={STOCK_VISIBLE_CONTENT_OPTIONS}
             client={props.client}
           />
+          <Alert
+            onDismiss={() => setShowSuccess(false)}
+            visible={showSuccess}
+            dismissAriaLabel="Close alert"
+            dismissible
+            type="success"
+          >
+            {successMessage}
+          </Alert>
           <Button onClick={refreshPrices} iconName="refresh">
             Refresh real-time stock prices
           </Button>
