@@ -159,6 +159,7 @@ export function AuthPage(props: any) {
                 <FormField label="Password">
                   <Input
                     value={password}
+                    type="password"
                     onChange={(event) => setPassword(event.detail.value)}
                   />
                 </FormField>
@@ -222,6 +223,7 @@ export function AuthPage(props: any) {
                 <FormField label="Password">
                   <Input
                     value={password}
+                    type="password"
                     onChange={(event) => setPassword(event.detail.value)}
                   />
                 </FormField>
